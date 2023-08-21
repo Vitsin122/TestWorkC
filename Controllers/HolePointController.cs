@@ -5,7 +5,8 @@ using TestWorkC.Models;
 
 namespace TestWorkC.Controllers
 {
-
+    [ApiController]
+    [Route("[controller]")]
     public class HolePointController : Controller
     {
         NpgApplicationContext context;
@@ -18,7 +19,7 @@ namespace TestWorkC.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Json(context.HolePoints.ToArray());
+            return Json(context.HolePoints.ToList());
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -35,7 +36,7 @@ namespace TestWorkC.Controllers
         [HttpPost]
         public IActionResult Create(HolePoints points)
         {
-            var hasHole = context.Holes.Where(m => m.Id == points.Id).FirstOrDefault();
+            var hasHole = context.Holes.Where(m => m.Id == points.HoleId).FirstOrDefault();
 
             if (hasHole != null)
             {
@@ -60,7 +61,7 @@ namespace TestWorkC.Controllers
                 toUpdate.HoleId = points.HoleId;
                 context.HolePoints.Update(toUpdate);
                 context.SaveChanges();
-                return Json(points);
+                return Json(toUpdate);
             }
 
             return BadRequest("Wrong HoleId");
